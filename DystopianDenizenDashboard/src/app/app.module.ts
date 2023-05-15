@@ -12,6 +12,8 @@ import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { BlogListComponent } from './blog-list/blog-list.component';
 import { BlogPostComponent } from './blog-post/blog-post.component';
+import { CarouselComponent } from './carousel/carousel.component';
+import { TextEditorComponent } from './text-editor/text-editor.component';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { BlogPostComponent } from './blog-post/blog-post.component';
     HomeComponent,
     AboutComponent,
     BlogListComponent,
-    BlogPostComponent
+    BlogPostComponent,
+    CarouselComponent,
+    TextEditorComponent
   ],
   imports: [
     BrowserModule,
