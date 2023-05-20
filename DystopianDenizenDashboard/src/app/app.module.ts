@@ -14,6 +14,7 @@ import { BlogListComponent } from './blog-list/blog-list.component';
 import { BlogPostComponent } from './blog-post/blog-post.component';
 import { CarouselComponent } from './carousel/carousel.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
+import { DystopianDiscourseComponent } from './dystopian-discourse/dystopian-discourse.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     BlogListComponent,
     BlogPostComponent,
     CarouselComponent,
-    TextEditorComponent
+    TextEditorComponent,
+    DystopianDiscourseComponent
   ],
   imports: [
     BrowserModule,
