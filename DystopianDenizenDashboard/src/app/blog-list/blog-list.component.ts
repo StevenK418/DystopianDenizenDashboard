@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Blogpost } from '../models/blogpost';
+import { Component, OnInit } from '@angular/core';
+import { IBlogPost } from '../models/blogpost';
 import { BlogAPIServiceService } from '../services/blog-apiservice.service';
 
 @Component({
@@ -7,51 +7,51 @@ import { BlogAPIServiceService } from '../services/blog-apiservice.service';
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css']
 })
-export class BlogListComponent {
-  BlogpostList: Blogpost[] = [];
-  message: string = "";
+export class BlogListComponent implements OnInit{
+  blogPostsData?:IBlogPost[];
 
-  currentBlogpost: Blogpost| undefined;
+  show?:boolean;
+  selectedID?:number;
 
-  constructor(private BlogpostService: BlogAPIServiceService) { }
-
-  ngOnInit(): void 
+  constructor(private _blogAPIService:BlogAPIServiceService)
   {
-    this.BlogpostService.getBlogposts().subscribe(
-      {
-        next: (value: Blogpost[] )=> this.BlogpostList = value,
-        complete: () => console.log('Blogpost service finished'),
-        error: (mess) => this.message = mess
-      })
+
   }
 
-  clicked(Blogpost: Blogpost): void
+  ngOnInit()
   {
-    this.loadBlogpostDetails(Blogpost);
+    this._blogAPIService.getblogPostData().subscribe(blogPostData => {this.blogPostsData = blogPostData});
   }
 
-  dismissAlert()
+  deleteBook(blogPostId:string)
   {
-    this.message = "";
+    this._blogAPIService.deleteblogPostData(blogPostId);
   }
 
-  // Used to manually load the Blogpost details after updates and onClickevents
-  loadBlogpostDetails(Blogpost:Blogpost)
+  //  //Adds the book, along with the review and rating to the database
+  //  updateBook(bookObject:IReviewedBook, rating:string, review:string)
+  //  {
+  //     //  //Construct a new book
+  //      let book:IReviewedBook = new ReviewedBook(
+  //                                  bookObject.title,
+  //                                  bookObject.author,
+  //                                  bookObject.publisher,
+  //                                  bookObject.yearPublished,
+  //                                  bookObject.description!,
+  //                                  bookObject.isbn,
+  //                                  bookObject.coverArt,
+  //                                  rating,
+  //                                  review
+  //      );
+  //      //Send this book to the API service to be added to the DB.
+  //      this._bookAPIService.updateBook(bookObject.id!, book);
+  //  }
+
+
+  //Shows a specific form
+  showForm(buttonId:number)
   {
-    this.currentBlogpost = Blogpost;
+      this.selectedID = buttonId;
+      this.show = !this.show;
   }
-
-    // Highlight the selected item
-    isSelected(Blogpost: Blogpost): boolean 
-    {
-      if (!Blogpost || !this.currentBlogpost) 
-      {
-        return false;
-      }
-      else 
-      {
-        return Blogpost._id === this.currentBlogpost._id;
-      }
-    }
-
 }

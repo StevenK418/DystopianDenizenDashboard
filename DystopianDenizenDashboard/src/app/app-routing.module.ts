@@ -4,13 +4,11 @@ import { AddBlogPostComponent } from './add-blog-post/add-blog-post.component';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
-import { DystopianDiscourseComponent } from './dystopian-discourse/dystopian-discourse.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'about',component: AboutComponent},
-  {path: 'add-blog',component: AddBlogPostComponent},
-  {path: 'dystopian-discourse',component: DystopianDiscourseComponent}
+  {path: 'about', component: AboutComponent},
+  {path: 'add-blog',component: AddBlogPostComponent}
 ];
 
 @NgModule({

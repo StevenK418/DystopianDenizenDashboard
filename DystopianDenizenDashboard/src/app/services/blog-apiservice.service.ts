@@ -1,92 +1,85 @@
-import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError, retry, catchError } from 'rxjs';
-import { Blogpost } from '../models/blogpost';
+import { Observable, throwError} from 'rxjs';
+import { IBlogPost } from '../models/blogpost';
+import {
+  AngularFirestoreCollection,
+  AngularFirestore,
+} from '@angular/fire/compat/firestore';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class BlogAPIServiceService {
+export class BlogAPIServiceService implements OnInit {
+  blogPostDataCollection: AngularFirestoreCollection<IBlogPost>;
 
-  constructor(private http: HttpClient) { }
-  
-  private dataUri = `${environment.apiUri}/Blogposts`;
-  
-  getBlogposts(): Observable<Blogpost[]>
-  {
-    console.log("get Blogposts called" );
+  blogPostData!: Observable<IBlogPost[]>;
 
-    return this.http.get<Blogpost[]>(`${this.dataUri}`)
-    .pipe(
-      retry(3),
-      catchError(this.handleError)
+  errorMessage?: string;
+
+  constructor(private _http: HttpClient, private _afs: AngularFirestore) {
+    this.blogPostDataCollection = _afs.collection<IBlogPost>(
+      'Blogs_data',
+      (ref) => ref.orderBy('title', 'asc')
     );
-    
   }
 
-   //taken from: https://angular.io/guide/http
+  ngOnInit() {}
 
-   private handleError(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
-      console.error(
-        `Backend returned code ${error.status}, body was: `, error.error);
-    }
-    // Return an observable with a user-facing error message.
-    return throwError(() => new Error('Something bad happened; please try again later.'));
-  }
-
-  // CRUD Operations
-  //CREATE
-  addNewBlogpost(Blogpost: Blogpost): Observable<Blogpost> {
-    return this.http.post<Blogpost>(this.dataUri, Blogpost)
-      .pipe(
-        catchError(this.handleError)
+  //Adds a new blogPost to the database
+  addblogPostData(blog: IBlogPost): void {
+    this.blogPostDataCollection.add(
+      JSON.parse(
+        JSON.stringify(blog, function (k, v) {
+          if (v === undefined) {
+            return null;
+          }
+          return v;
+        })
       )
-  }
-
-  //UPDATE
-  updateBlogpost(id: string, Blogpost: Blogpost): Observable<Blogpost> {
-    console.log('subscribing to update' + id);
-    let BlogpostURI: string = this.dataUri + '/' + id;
-    return this.http.put<Blogpost>(BlogpostURI, Blogpost)
-      .pipe(
-        catchError(this.handleError)
-      )
-  }
-
-  
-
-  //Get an Blogpost of a given ID
-  GetBlogpost(id: string): Observable<Blogpost>
-  {
-    let BlogpostURI: string = this.dataUri + '/' + id;
-    console.log('Request sent: to' + BlogpostURI);
-    let result = this.http.get<Blogpost>(`${BlogpostURI}`)
-    .pipe(
-      retry(3),
-      catchError(this.handleError)
     );
-
-    // let Blogpost = result.subscribe((e) => {
-    //   console.log(e);
-    //   return e;
-    // });
-    console.log(result);
-    return result;
   }
 
-  //DELETE
-  deleteBlogpost(id: string): Observable<unknown> {
-    const url = `${this.dataUri}/${id}`; 
-    return this.http.delete(url)
-      .pipe(
-        catchError(this.handleError)
-      );
+  //Deletes a blogPost of a given id from the database
+  deleteblogPostData(blogPostId: string): void {
+    this.blogPostDataCollection.doc(blogPostId).delete();
+  }
+
+  //Gets a list of blogPosts from the database
+  getblogPostData(): Observable<IBlogPost[]> {
+    //Connect to the db
+    this.blogPostData = this.blogPostDataCollection.valueChanges({
+      idField: `id`,
+    });
+    this.blogPostData.subscribe((data) =>
+      console.log(
+        'getblogPostData' +
+          JSON.stringify(data, function (k, v) {
+            if (v === undefined) {
+              return null;
+            }
+            return v;
+          })
+      )
+    );
+    //Return the blogPost data from the database
+    return this.blogPostData;
+  }
+
+  //Updates a blogPost of given id
+  updateblogPost(id: string, blogPost: IBlogPost) {
+    //update the blogPost
+    this.blogPostDataCollection.doc(id).update({
+      title: blogPost.title,
+      author: blogPost.author,
+      dateCreated: blogPost.dateCreated,
+      featuredImage: blogPost.featuredImage,
+    });
+  }
+
+  //Gracefully handle any errors
+  private handleError(err: HttpErrorResponse) {
+    console.log('blogPostApiService: ' + err.message);
+    return throwError(err.message);
   }
 }

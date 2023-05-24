@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "dystopiandenizendashboard": {
+      "hosting": {
+        "DystopianDenizenDashboard": [
+          "dystopiandenizendashboard"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "dystopiandenizendashboard"
+  }
+}

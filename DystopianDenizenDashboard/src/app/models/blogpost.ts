@@ -1,4 +1,4 @@
-export interface Blogpost
+export interface IBlogPost
 {
     _id: string;
     title: string;

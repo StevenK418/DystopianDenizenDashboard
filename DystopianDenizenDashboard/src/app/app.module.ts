@@ -15,7 +15,15 @@ import { BlogPostComponent } from './blog-post/blog-post.component';
 import { CarouselComponent } from './carousel/carousel.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
 import { DystopianDiscourseComponent } from './dystopian-discourse/dystopian-discourse.component';
-
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService } from '@angular/fire/analytics';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { HttpClientModule } from '@angular/common/http';
+import { AngularFireModule } from '@angular/fire/compat';
 
 @NgModule({
   declarations: [
@@ -29,15 +37,23 @@ import { DystopianDiscourseComponent } from './dystopian-discourse/dystopian-dis
     BlogListComponent,
     BlogPostComponent,
     CarouselComponent,
-    TextEditorComponent,
-    DystopianDiscourseComponent
+    TextEditorComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    AngularFireModule,
+    AngularFirestoreModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAnalytics(() => getAnalytics()),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
   ],
-  providers: [],
+  providers: [
+    ScreenTrackingService,UserTrackingService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
