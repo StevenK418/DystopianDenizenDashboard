@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IBlogPost } from '../models/blogpost';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { BlogAPIServiceService } from '../services/blog-apiservice.service';
 
 @Component({
@@ -13,19 +14,19 @@ export class BlogListComponent implements OnInit{
   show?:boolean;
   selectedID?:number;
 
-  constructor(private _blogAPIService:BlogAPIServiceService)
+  constructor(private _blogAPIService2:BlogAPIServiceService)
   {
 
   }
 
   ngOnInit()
   {
-    this._blogAPIService.getblogPostData().subscribe(blogPostData => {this.blogPostsData = blogPostData});
+     this._blogAPIService2.getblogPostData().subscribe(blogPostData => {this.blogPostsData = blogPostData});
   }
 
   deleteBook(blogPostId:string)
   {
-    this._blogAPIService.deleteblogPostData(blogPostId);
+    this._blogAPIService2.deleteblogPostData(blogPostId);
   }
 
   //  //Adds the book, along with the review and rating to the database

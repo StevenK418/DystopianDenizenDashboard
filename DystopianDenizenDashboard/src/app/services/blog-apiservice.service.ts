@@ -19,7 +19,7 @@ export class BlogAPIServiceService implements OnInit {
 
   constructor(private _http: HttpClient, private _afs: AngularFirestore) {
     this.blogPostDataCollection = _afs.collection<IBlogPost>(
-      'Blogs_data',
+      'Blogs',
       (ref) => ref.orderBy('title', 'asc')
     );
   }

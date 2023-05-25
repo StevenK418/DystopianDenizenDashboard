@@ -24,7 +24,7 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
-
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +37,8 @@ import { AngularFireModule } from '@angular/fire/compat';
     BlogListComponent,
     BlogPostComponent,
     CarouselComponent,
-    TextEditorComponent
+    TextEditorComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -52,7 +53,9 @@ import { AngularFireModule } from '@angular/fire/compat';
     provideFirestore(() => getFirestore()),
   ],
   providers: [
-    ScreenTrackingService,UserTrackingService
+    ScreenTrackingService,UserTrackingService,
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
+    AngularFirestore,
   ],
   bootstrap: [AppComponent]
 })
